@@ -12,7 +12,7 @@
 /**
  * Default Cookie Configuration
  * 
- * Enabled when the configuration file can not be accessed.
+ * Enabled when the language file can not be accessed.
  */
 class EmailDefaultLanguage
 {

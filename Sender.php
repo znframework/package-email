@@ -120,8 +120,10 @@ class Sender implements SenderInterface
      */
     public function settings(Array $settings = NULL) : Sender
     {
-        $this->getLang = Lang::default(new EmailDefaultLanguage)->select('Services');
-        $config        = Config::default(new EmailDefaultConfiguration)::get('Services', 'email');
+        $this->getLang = Lang::default('ZN\Email\EmailDefaultLanguage')
+                             ::select('Services');
+        $config        = Config::default('ZN\Email\EmailDefaultConfiguration')
+                               ::get('Services', 'email');
         $smtpConfig    = $config['smtp'];
         $generalConfig = $config['general'];
 
