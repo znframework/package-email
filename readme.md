@@ -14,7 +14,7 @@ composer require znframework/package-email
 
 <h3>Documentation</h3>
 <p>
-Click for <a href="docs.znframework.com/uzak-servisler/mail-kutuphanesi">documentation</a> of your library.
+Click for <a href="https://docs.znframework.com/uzak-servisler/mail-kutuphanesi">documentation</a> of your library.
 </p>
 
 <h3>Example Usage</h3>
