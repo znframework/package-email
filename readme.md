@@ -28,39 +28,12 @@ Basic level usage is shown below.
 ZN\ZN::run();
 
 # The default settings are in the ZN\Email\EmailDefaultConfiguration file. 
-# You can make your settings in this file.
-# The Config::set() method should be used if you need to configure settings externally.
-Config::services('email', 
-[
-    'driver' => 'smtp',
-    'smtp'   =>
-    [
-        'host'      => '',
-        'user'      => '',
-        'password'  => '',
-        'port'      => 587,
-        'keepAlive' => false,
-        'timeout'   => 10,
-        'encode'    => '',  # empty, tls, ssl
-        'dsn'       => false,
-        'auth'      => true
-    ],
-    'general' =>
-    [
-        'senderMail'    => '',                  # Default Sender E-mail Address.
-        'senderName'    => '',                  # Default Sender Name.
-        'priority'      => 3,                   # 1, 2, 3, 4, 5
-        'charset'       => 'UTF-8',             # Charset Type
-        'contentType'   => 'html',              # plain, html
-        'multiPart'     => 'mixed',             # mixed, related, alternative
-        'xMailer'       => 'ZN',
-        'encoding'      => '8bit',              # 8bit, 7bit
-        'mimeVersion'   => '1.0',               # MIME Version
-        'mailPath'      => '/usr/sbin/sendmail' # Default Mail Path
-    ]
-]);
-
-Email::from('from@example.com')
+Email::smtpHost('mail.example.com')
+     ->smtpUser('example@example.com')
+     ->smtpPassword('Example1234')
+     ->smtpPort(587)
+     ->smtpEncode('tls')
+     ->from('from@example.com')
      ->to('to@example.com')
      ->send('This is Subject', 'This is message.');
 
