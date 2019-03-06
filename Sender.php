@@ -604,14 +604,14 @@ class Sender implements SenderInterface
             $fileContent =& $file;
         }
 
+        if( strpos($file, '://') === false && ! file_exists($file) )
+        {
+            $this->error[] = $this->getLang('email:attachmentMissing', $file);
+        }
+
         if( empty($mime) )
         {
-            if( strpos($file, '://') === false && ! file_exists($file) )
-            {
-                $this->error[] = $this->getLang('email:attachmentMissing', $file);
-            }
-
-            if( ! $fp = @fopen($file, 'rb') )
+            if( ! ($fp = @fopen($file, 'rb')) )
             {
                 $this->error[] = $this->getLang('email:attachmentUnreadable', $file);
             }
@@ -619,6 +619,13 @@ class Sender implements SenderInterface
             $fileContent = stream_get_contents($fp);
 
             fclose($fp);
+        }
+        else
+        {
+            if( ! ($fileContent = file_get_contents($file)) )
+            {
+                $this->error[] = $this->getLang('email:attachmentUnreadable', $file);
+            }
         }
 
         $this->attachments[] =
@@ -683,30 +690,13 @@ class Sender implements SenderInterface
             }
         }
 
-        if( ! empty($subject) )
-        {
-            $this->subject($subject);
-        }
+        if( ! empty($subject) ) $this->subject($subject);
+        if( ! empty($message) ) $this->message($message);
 
-        if( ! empty($message) )
-        {
-            $this->message($message);
-        }
-
-        if( ! empty($this->to) )
-        {
-            $this->addHeader('To', $this->toString($this->to));
-        }
-
-        if( ! empty($this->cc) )
-        {
-            $this->addHeader('Cc', $this->toString($this->cc));
-        }
-
-        if( ! empty($this->bcc) )
-        {
-            $this->addHeader('Bcc', $this->toString($this->bcc));
-        }
+        if( ! empty($this->to)      ) $this->addHeader('To'      , $this->toString($this->to)     );
+        if( ! empty($this->replyTo) ) $this->addHeader('Reply-To', $this->toString($this->replyTo));
+        if( ! empty($this->cc)      ) $this->addHeader('Cc'      , $this->toString($this->cc)     );
+        if( ! empty($this->bcc)     ) $this->addHeader('Bcc'     , $this->toString($this->bcc)    );
 
         $this->buildContent();
 
