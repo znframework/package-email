@@ -54,8 +54,8 @@ class PipeDriver extends DriverMappingAbstract
 
         if( $status !== 0 )
         {
-            $exceptionMessage  = Lang::select('Services', 'email:noSocket').' ';
-            $exceptionMessage .= Lang::select('Services', 'email:exitStatus', $status);
+            $exceptionMessage  = Lang::default('ZN\Email\EmailDefaultLanguage')::select('Services', 'email:noSocket').' ';
+            $exceptionMessage .= Lang::default('ZN\Email\EmailDefaultLanguage')::select('Services', 'email:exitStatus', $status);
 
             throw new IOException($exceptionMessage);
         }
