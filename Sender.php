@@ -492,11 +492,11 @@ class Sender implements SenderInterface
      */
     public function template(String $table, $column, Array $data = []) : Sender
     {
-        if( $content = Inclusion\Template::use($table, (array) $column, true) )
+        if( is_array($column) && ($content = Inclusion\Template::use($table, $column, true)) )
         {
-            $this->message($content);
+            $this->message($content); // @codeCoverageIgnore
         }
-        else
+        else if( is_scalar($column) )
         {
             $tableEx  = explode(':', $table);
             $columnEx = explode(':', $column); 
@@ -506,7 +506,7 @@ class Sender implements SenderInterface
 
             if( $column === NULL )
             {
-                $this->error[] = $this->getLang('email:templateColumnError', '1.($table)');
+                $this->error[] = $this->getLang('email:templateColumnError', '1.($table)'); // @codeCoverageIgnore
             }
         
             $whereColumn = $columnEx[0];
@@ -514,7 +514,7 @@ class Sender implements SenderInterface
             
             if( $whereValue === NULL )
             {
-                $this->error[] = $this->getLang('email:templateValueError', '2.($column)');
+                $this->error[] = $this->getLang('email:templateValueError', '2.($column)'); // @codeCoverageIgnore
             }
             
             if( empty($this->error) )
