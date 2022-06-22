@@ -109,7 +109,7 @@ class Sender implements SenderInterface
      */
     protected function getLang(string $type, string $changes = NULL) : string
     {
-        return str_replace('%', $changes, $this->getLang[$type]);
+        return str_replace('%', $changes ?? '', $this->getLang[$type]);
     }
 
     /**
@@ -600,7 +600,7 @@ class Sender implements SenderInterface
         }
 
         # Is it a real mime?
-        if( ! strstr($mime, '/') )
+        if( ! strstr($mime ?? '', '/') )
         {
             # Check it out from the list
             if( $mimes = (Singleton::class('ZN\Helpers\Mime')->mimeTypes[$mime] ?? NULL) )
@@ -641,7 +641,7 @@ class Sender implements SenderInterface
         }
         else if( ! $fileContent = file_get_contents($file) )
         {
-            $this->error[] = $this->getLang('email:attachmentUnreadable', $file);
+            $this->error[] = $this->getLang('email:attachmentUnreadable', $file); // @codeCoverageIgnore
         }
 
         $this->attachments[] =
@@ -702,7 +702,7 @@ class Sender implements SenderInterface
             }
             else
             {
-                return ! $this->error[] = $this->getLang('email:noFrom');
+                return ! $this->error[] = $this->getLang('email:noFrom'); // @codeCoverageIgnore
             }
         }
 
@@ -740,7 +740,7 @@ class Sender implements SenderInterface
 
         if( empty($send) )
         {
-            return ! $this->error[] = $this->getLang('email:noSend');
+            return ! $this->error[] = $this->getLang('email:noSend'); // @codeCoverageIgnore
         }
 
         $this->defaultVariables();
@@ -890,7 +890,7 @@ class Sender implements SenderInterface
         }
         else
         {
-            $this->header = $header.$body;
+            $this->header = $header.$body; // @codeCoverageIgnore
         }
 
         return true;
