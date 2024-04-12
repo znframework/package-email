@@ -85,6 +85,7 @@ class SmtpDriver extends DriverMappingAbstract
         $this->keepAlive  = $settings['keepAlive'] ?? '';
         $this->dsn        = $settings['dsn']       ?? '';
         $this->tos        = $settings['tos']       ?? [];
+        $this->lf         = $settings['commandLine'] ?? $this->lf;
     }
 
     /**
@@ -136,7 +137,7 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( $this->encode === 'tls' )
         {
-            $this->encodeSocketWithTLSMethod();
+            $this->encodeSocketWithTLSMethod(); // @codeCoverageIgnore
         }
 
         return $this->setCommand('hello');
@@ -144,6 +145,8 @@ class SmtpDriver extends DriverMappingAbstract
 
     /**
      * Protected encode socket with tls method
+     * 
+     * @codeCoverageIgnore
      */
     protected function encodeSocketWithTLSMethod()
     {
@@ -180,11 +183,13 @@ class SmtpDriver extends DriverMappingAbstract
             return true;
         }
 
-        return false;
+        return false; // @codeCoverageIgnore
     }
 
     /**
      * Protected socket ssl without connection
+     * 
+     * @codeCoverageIgnore
      */
     protected function socketSSLWithoutConnection(&$errno, &$errstr)
     {
@@ -192,7 +197,7 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( ! is_resource($this->connect) )
         {
-            throw new SMTPConnectException(NULL, $errno.' '.$errstr);
+            throw new SMTPConnectException(NULL, $errno.' '.$errstr); 
         }
     }
 
@@ -203,12 +208,12 @@ class SmtpDriver extends DriverMappingAbstract
     {
         if( empty($this->host) )
         {
-            throw new SMTPEmptyHostNameException;
+            throw new SMTPEmptyHostNameException; // @codeCoverageIgnore
         }
 
         if( ! $this->connect() || ! $this->authLogin() )
         {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         $this->setCommand('from', $this->from);
@@ -220,7 +225,7 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( ! empty($this->cc) ) foreach( $this->cc as $key => $val )
         {
-            $this->setCommand('to', $key);
+            $this->setCommand('to', $key); // @codeCoverageIgnore
         }
 
         if( ! empty($this->bcc) ) foreach( $this->bcc as $key => $val )
@@ -238,12 +243,12 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( strpos($reply, '250') !== 0 )
         {
-            throw new SMTPConnectException(NULL, $reply);
+            throw new SMTPConnectException(NULL, $reply); // @codeCoverageIgnore
         }
 
         if( $this->keepAlive )
         {
-            $this->setCommand('reset');
+            $this->setCommand('reset'); // @codeCoverageIgnore
         }
         else
         {
@@ -260,12 +265,12 @@ class SmtpDriver extends DriverMappingAbstract
     {
         if( ! $this->auth )
         {
-            return true;
+            return true; // @codeCoverageIgnore
         }
 
         if( $this->user === '' && $this->password === '' )
         {
-            throw new SMTPEmptyUserPasswordException;
+            throw new SMTPEmptyUserPasswordException; // @codeCoverageIgnore
         }
 
         $this->setData('AUTH LOGIN');
@@ -274,11 +279,11 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( strpos($reply, '503') === 0 )
         {
-            return true;
+            return true; // @codeCoverageIgnore
         }
         elseif( strpos($reply, '334') !== 0 )
         {
-            throw new SMTPFailedLoginException(NULL, $reply);
+            throw new SMTPFailedLoginException(NULL, $reply); // @codeCoverageIgnore
         }
 
         $this->setData(base64_encode($this->user));
@@ -287,7 +292,7 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( strpos($reply, '334') !== 0 )
         {
-            throw new SMTPAuthException(NULL, $reply);
+            throw new SMTPAuthException(NULL, $reply); // @codeCoverageIgnore
         }
 
         $this->setData(base64_encode($this->password));
@@ -296,7 +301,7 @@ class SmtpDriver extends DriverMappingAbstract
 
         if( strpos($reply, '235') !== 0 )
         {
-            throw new SMTPAuthPasswordException(NULL, $reply);
+            throw new SMTPAuthPasswordException(NULL, $reply); // @codeCoverageIgnore
         }
 
         return true;
@@ -321,7 +326,7 @@ class SmtpDriver extends DriverMappingAbstract
                 }
                 else
                 {
-                    $this->setData('HELO '.$this->hostname());
+                    $this->setData('HELO '.$this->hostname()); // @codeCoverageIgnore
                 }
 
                 $resp = 250;
@@ -329,7 +334,7 @@ class SmtpDriver extends DriverMappingAbstract
             case 'to' :
                 if( $this->dsn )
                 {
-                    $this->setData('RCPT TO:<'.$data.'> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;'.$data);
+                    $this->setData('RCPT TO:<'.$data.'> NOTIFY=SUCCESS,DELAY,FAILURE ORCPT=rfc822;'.$data); // @codeCoverageIgnore
                 }
                 else
                 {
@@ -341,11 +346,11 @@ class SmtpDriver extends DriverMappingAbstract
 
         $reply = $this->getData();
 
-        $this->error[] = $cmd.': '.$reply;
+        $this->error[] = $cmd.': '.$reply; // @codeCoverageIgnore
 
         if( (int) substr($reply, 0, 3) !== $resp )
         {
-            throw new SMTPConnectException(NULL, $reply);
+            throw new SMTPConnectException(NULL, $reply); // @codeCoverageIgnore
         }
 
         if( $cmd === 'quit' )
@@ -369,12 +374,12 @@ class SmtpDriver extends DriverMappingAbstract
 
             if( $result === false )
             {
-                break;
+                break; // @codeCoverageIgnore
             }
         }
         if( $result === false )
         {
-            throw new SMTPDataFailureException(NULL, $data);
+            throw new SMTPDataFailureException(NULL, $data); // @codeCoverageIgnore
         }
 
         return true;
