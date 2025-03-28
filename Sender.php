@@ -662,14 +662,14 @@ class Sender implements SenderInterface
                 $mime = NULL;
             }
         }
-        
-        if( strpos($file, '://') === false && ! file_exists($file) )
-        {
-            $this->error[] = $this->getLang('email:attachmentMissing', $file);
-        }
 
         if( empty($mime) )
         {
+            if( strpos($file, '://') === false && ! file_exists($file) )
+            {
+                $this->error[] = $this->getLang('email:attachmentMissing', $file);
+            }
+
             if( $fp = @fopen($file, 'rb') )
             {
                 $fileContent = stream_get_contents($fp);
